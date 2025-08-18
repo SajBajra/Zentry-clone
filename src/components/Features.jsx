@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { TiLocationArrow } from "react-icons/ti";
+import useInViewMedia from "../hooks/useInViewMedia";
 
 export const BentoTilt = ({ children, className = "" }) => {
   const [transformStyle, setTransformStyle] = useState("");
@@ -42,6 +43,9 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [hoverOpacity, setHoverOpacity] = useState(0);
   const hoverButtonRef = useRef(null);
+  const videoRef = useRef(null);
+
+  useInViewMedia(videoRef);
 
   const handleMouseMove = (event) => {
     if (!hoverButtonRef.current) return;
@@ -59,6 +63,7 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
   return (
     <div className="relative size-full">
       <video
+        ref={videoRef}
         src={src}
         loop
         muted

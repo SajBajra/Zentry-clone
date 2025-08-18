@@ -37,21 +37,27 @@ const NavBar = () => {
   }, [isAudioPlaying]);
 
   useEffect(() => {
-    if (currentScrollY === 0) {
-      // Topmost position: show navbar without floating-nav
-      setIsNavVisible(true);
-      navContainerRef.current.classList.remove("floating-nav");
-    } else if (currentScrollY > lastScrollY) {
-      // Scrolling down: hide navbar and apply floating-nav
-      setIsNavVisible(false);
-      navContainerRef.current.classList.add("floating-nav");
-    } else if (currentScrollY < lastScrollY) {
-      // Scrolling up: show navbar with floating-nav
-      setIsNavVisible(true);
-      navContainerRef.current.classList.add("floating-nav");
-    }
+    // Throttle updates using rAF for smoother scrolling
+    let raf = null;
+    const update = () => {
+      if (currentScrollY === 0) {
+        setIsNavVisible(true);
+        navContainerRef.current.classList.remove("floating-nav");
+      } else if (currentScrollY > lastScrollY) {
+        setIsNavVisible(false);
+        navContainerRef.current.classList.add("floating-nav");
+      } else if (currentScrollY < lastScrollY) {
+        setIsNavVisible(true);
+        navContainerRef.current.classList.add("floating-nav");
+      }
+      setLastScrollY(currentScrollY);
+      raf = null;
+    };
 
-    setLastScrollY(currentScrollY);
+    if (!raf) raf = requestAnimationFrame(update);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [currentScrollY, lastScrollY]);
 
   useEffect(() => {

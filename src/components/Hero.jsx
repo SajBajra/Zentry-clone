@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 import Button from "./Button";
 import VideoPreview from "./VideoPreview";
+import useInViewMedia from "../hooks/useInViewMedia";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,6 +20,7 @@ const Hero = () => {
   const totalVideos = 4;
   const previewVideoRef = useRef(null);
   const nextVideoRef = useRef(null);
+  const backgroundVideoRef = useRef(null);
 
   const handleVideoLoad = () => {
     setLoadedVideos((prev) => prev + 1);
@@ -87,6 +89,9 @@ const Hero = () => {
 
   const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
 
+  // Auto-play/pause background video when visible
+  useInViewMedia(backgroundVideoRef, { rootMargin: "0px 0px -15% 0px", threshold: 0.2 });
+
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
       {loading && (
@@ -146,6 +151,7 @@ const Hero = () => {
             muted
             playsInline
             preload="metadata"
+            ref={backgroundVideoRef}
             className="absolute left-0 top-0 size-full object-cover object-center"
             onLoadedData={handleVideoLoad}
           />
