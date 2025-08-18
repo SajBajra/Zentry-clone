@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 
 import Button from "./Button";
+import { Link } from "react-router-dom";
 
 const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
 
@@ -77,7 +78,9 @@ const NavBar = () => {
         <nav className="flex size-full items-center justify-between p-4" aria-label="Primary">
           {/* Logo and Product button */}
           <div className="flex items-center gap-7">
-            <img src="/img/logo.png" alt="logo" className="w-10" />
+            <Link to="/" aria-label="Go to home">
+              <img src="/img/logo.png" alt="logo" className="w-10" />
+            </Link>
 
             <Button
               id="product-button"
@@ -90,14 +93,12 @@ const NavBar = () => {
           {/* Navigation Links and Audio Button */}
           <div className="flex h-full items-center">
             <div className="hidden md:block">
-              {navItems.map((item, index) => (
-                <a
-                  key={index}
-                  href={`#${item.toLowerCase()}`}
-                  className="nav-hover-btn"
-                >
-                  {item}
-                </a>
+              {[{label:"Nexus", to:"/nexus"}, {label:"Vault", to:"/vault"}, {label:"Prologue", to:"/prologue"}, {label:"About", to:"/about"}, {label:"Contact", to:"/#contact"}].map(({label, to}, index) => (
+                to.startsWith("/#") ? (
+                  <a key={index} href={to} className="nav-hover-btn">{label}</a>
+                ) : (
+                  <Link key={index} to={to} className="nav-hover-btn">{label}</Link>
+                )
               ))}
             </div>
 
