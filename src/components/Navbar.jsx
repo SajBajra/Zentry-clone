@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 
 import Button from "./Button";
-import { Link } from "react-router-dom";
 
 const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
 
@@ -38,27 +37,21 @@ const NavBar = () => {
   }, [isAudioPlaying]);
 
   useEffect(() => {
-    // Throttle updates using rAF for smoother scrolling
-    let raf = null;
-    const update = () => {
-      if (currentScrollY === 0) {
-        setIsNavVisible(true);
-        navContainerRef.current.classList.remove("floating-nav");
-      } else if (currentScrollY > lastScrollY) {
-        setIsNavVisible(false);
-        navContainerRef.current.classList.add("floating-nav");
-      } else if (currentScrollY < lastScrollY) {
-        setIsNavVisible(true);
-        navContainerRef.current.classList.add("floating-nav");
-      }
-      setLastScrollY(currentScrollY);
-      raf = null;
-    };
+    if (currentScrollY === 0) {
+      // Topmost position: show navbar without floating-nav
+      setIsNavVisible(true);
+      navContainerRef.current.classList.remove("floating-nav");
+    } else if (currentScrollY > lastScrollY) {
+      // Scrolling down: hide navbar and apply floating-nav
+      setIsNavVisible(false);
+      navContainerRef.current.classList.add("floating-nav");
+    } else if (currentScrollY < lastScrollY) {
+      // Scrolling up: show navbar with floating-nav
+      setIsNavVisible(true);
+      navContainerRef.current.classList.add("floating-nav");
+    }
 
-    if (!raf) raf = requestAnimationFrame(update);
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-    };
+    setLastScrollY(currentScrollY);
   }, [currentScrollY, lastScrollY]);
 
   useEffect(() => {
@@ -75,12 +68,10 @@ const NavBar = () => {
       className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6"
     >
       <header className="absolute top-1/2 w-full -translate-y-1/2">
-        <nav className="flex size-full items-center justify-between p-4" aria-label="Primary">
+        <nav className="flex size-full items-center justify-between p-4">
           {/* Logo and Product button */}
           <div className="flex items-center gap-7">
-            <Link to="/" aria-label="Go to home">
-              <img src="/img/logo.png" alt="logo" className="w-10" />
-            </Link>
+            <img src="/img/logo.png" alt="logo" className="w-10" />
 
             <Button
               id="product-button"
@@ -93,21 +84,20 @@ const NavBar = () => {
           {/* Navigation Links and Audio Button */}
           <div className="flex h-full items-center">
             <div className="hidden md:block">
-              {[{label:"Nexus", to:"/nexus"}, {label:"Vault", to:"/vault"}, {label:"Prologue", to:"/prologue"}, {label:"About", to:"/about"}, {label:"Contact", to:"/#contact"}].map(({label, to}, index) => (
-                to.startsWith("/#") ? (
-                  <a key={index} href={to} className="nav-hover-btn">{label}</a>
-                ) : (
-                  <Link key={index} to={to} className="nav-hover-btn">{label}</Link>
-                )
+              {navItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={`#${item.toLowerCase()}`}
+                  className="nav-hover-btn"
+                >
+                  {item}
+                </a>
               ))}
             </div>
 
             <button
               onClick={toggleAudioIndicator}
               className="ml-10 flex items-center space-x-0.5"
-              type="button"
-              aria-pressed={isIndicatorActive}
-              aria-label={isAudioPlaying ? "Pause background audio" : "Play background audio"}
             >
               <audio
                 ref={audioElementRef}

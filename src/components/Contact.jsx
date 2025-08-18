@@ -1,9 +1,9 @@
 import AnimatedTitle from "./AnimatedTitle";
 import Button from "./Button";
 
-const ImageClipBox = ({ src, clipClass, alt }) => (
+const ImageClipBox = ({ src, clipClass }) => (
   <div className={clipClass}>
-    <img src={src} alt={alt} loading="lazy" />
+    <img src={src} />
   </div>
 );
 
@@ -15,12 +15,10 @@ const Contact = () => {
           <ImageClipBox
             src="/img/contact-1.webp"
             clipClass="contact-clip-path-1"
-            alt="Character portrait left"
           />
           <ImageClipBox
             src="/img/contact-2.webp"
             clipClass="contact-clip-path-2 lg:translate-y-40 translate-y-60"
-            alt="Character portrait right"
           />
         </div>
 
@@ -28,12 +26,10 @@ const Contact = () => {
           <ImageClipBox
             src="/img/swordman-partial.webp"
             clipClass="absolute md:scale-125"
-            alt="Swordman partial illustration"
           />
           <ImageClipBox
             src="/img/swordman.webp"
             clipClass="sword-man-clip-path md:scale-125"
-            alt="Swordman silhouette"
           />
         </div>
 
@@ -44,7 +40,7 @@ const Contact = () => {
 
           <AnimatedTitle
             title="let&#39;s b<b>u</b>ild the <br /> new era of <br /> g<b>a</b>ming t<b>o</b>gether."
-            containerClass="special-font !md:text-[6.2rem] w-full font-zentry !text-5xl !font-black !leading-[.9]"
+            className="special-font !md:text-[6.2rem] w-full font-zentry !text-5xl !font-black !leading-[.9]"
           />
 
           <Button title="contact us" containerClass="mt-10 cursor-pointer" />

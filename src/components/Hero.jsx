@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 
 import Button from "./Button";
 import VideoPreview from "./VideoPreview";
-import useInViewMedia from "../hooks/useInViewMedia";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,9 +17,7 @@ const Hero = () => {
   const [loadedVideos, setLoadedVideos] = useState(0);
 
   const totalVideos = 4;
-  const previewVideoRef = useRef(null);
-  const nextVideoRef = useRef(null);
-  const backgroundVideoRef = useRef(null);
+  const nextVdRef = useRef(null);
 
   const handleVideoLoad = () => {
     setLoadedVideos((prev) => prev + 1);
@@ -49,11 +46,7 @@ const Hero = () => {
           height: "100%",
           duration: 1,
           ease: "power1.inOut",
-          onStart: () => {
-            if (nextVideoRef.current) {
-              nextVideoRef.current.play();
-            }
-          },
+          onStart: () => nextVdRef.current.play(),
         });
         gsap.from("#current-video", {
           transformOrigin: "center center",
@@ -87,10 +80,7 @@ const Hero = () => {
     });
   });
 
-  const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
-
-  // Auto-play/pause background video when visible
-  useInViewMedia(backgroundVideoRef, { rootMargin: "0px 0px -15% 0px", threshold: 0.2 });
+  const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
 
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
@@ -117,12 +107,10 @@ const Hero = () => {
                 className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"
               >
                 <video
-                  ref={previewVideoRef}
+                  ref={nextVdRef}
                   src={getVideoSrc((currentIndex % totalVideos) + 1)}
                   loop
                   muted
-                  playsInline
-                  preload="metadata"
                   id="current-video"
                   className="size-64 origin-center scale-150 object-cover object-center"
                   onLoadedData={handleVideoLoad}
@@ -132,12 +120,10 @@ const Hero = () => {
           </div>
 
           <video
-            ref={nextVideoRef}
+            ref={nextVdRef}
             src={getVideoSrc(currentIndex)}
             loop
             muted
-            playsInline
-            preload="metadata"
             id="next-video"
             className="absolute-center invisible absolute z-20 size-64 object-cover object-center"
             onLoadedData={handleVideoLoad}
@@ -149,9 +135,6 @@ const Hero = () => {
             autoPlay
             loop
             muted
-            playsInline
-            preload="metadata"
-            ref={backgroundVideoRef}
             className="absolute left-0 top-0 size-full object-cover object-center"
             onLoadedData={handleVideoLoad}
           />

@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  width: 100%;
+  width: 100dvw;
   overflow-x: hidden;
   background-color: #dfdff0;
   font-family: "General Sans", sans-serif;
@@ -39,11 +39,6 @@ body {
 }
 
 @layer utilities {
-  @media (prefers-reduced-motion: reduce) {
-    .animated-word {
-      transition: none !important;
-    }
-  }
   .border-hsla {
     @apply border border-white/20;
   }
@@ -53,7 +48,7 @@ body {
   }
 
   .floating-nav {
-    @apply bg-black/60 backdrop-blur-md rounded-lg border border-white/10 shadow-lg;
+    @apply bg-black rounded-lg border;
   }
 
   .absolute-center {
